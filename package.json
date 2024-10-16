@@ -1,5 +1,5 @@
 {
-  "name": "vlock-sdk",
+  "name": "vlock-program-sdk",
   "version": "1.0.0",
   "description": "A lightweightsdk for interacting with the vlock solana program",
   "main": "dist/index.js",
