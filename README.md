@@ -5,13 +5,13 @@ A lightweight SDK for interacting with the vlock solana program.
 ## Installation
 
 ```bash
-npm install vlock-sdk
+npm install vlock-program-sdk
 ```
 
 ## Usage
 
 ```ts
-import { Vlock } from "vlock-sdk";
+import { Vlock } from "vlock-program-sdk";
 
 const program = new Program(idl, provider as AnchorProvider);
 
