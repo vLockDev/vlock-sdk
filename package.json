@@ -1,0 +1,27 @@
+{
+  "name": "vlock-sdk",
+  "version": "1.0.0",
+  "description": "A lightweightsdk for interacting with the vlock solana program",
+  "main": "dist/index.js",
+  "repository": "https://github.com/vLockDev/vlock-sdk",
+  "homepage": "https://github.com/vLockDev/vlock-sdk",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "NineOwls",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.3",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  }
+}
