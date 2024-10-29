@@ -136,8 +136,9 @@ export default class Vlock {
         tx: any;
     }>;
     /**
-     * Claim rewards from the claim program and sends them to the redeemer
-     * @param rewarder - The rewarder public key
+     * Claim bribe rewards from the claim program and send them to the redeemer
+     * and set the reward rate for the rewarder
+     * @param rewarder - The rewarder public key - for setting the reward rate
      * @param escrowPda - The escrow pda for the claim program
      * @param redeemerTokenAccount - The redeemer token account for the reward token
      *
@@ -189,4 +190,13 @@ export default class Vlock {
      * @returns - The transaction signature
      */
     stakeTokens(miner: PublicKey, quarry: PublicKey, rewarder: PublicKey, amount: number, payer: PublicKey): Promise<any>;
+    /**
+     * Redeem iou tokens for the reward token
+     * @param redeemer - The redeemer public key
+     * @param iouMint - The iou token mint
+     * @param iouSource - The iou source token account
+     * @param amount - The amount to redeem
+     * @returns - The transaction signature
+     */
+    redeemIouTokens(redeemer: PublicKey, iouMint: PublicKey, iouSource: PublicKey, amount: number): Promise<void>;
 }

@@ -507,8 +507,9 @@ var Vlock = /** @class */ (function () {
         });
     };
     /**
-     * Claim rewards from the claim program and sends them to the redeemer
-     * @param rewarder - The rewarder public key
+     * Claim bribe rewards from the claim program and send them to the redeemer
+     * and set the reward rate for the rewarder
+     * @param rewarder - The rewarder public key - for setting the reward rate
      * @param escrowPda - The escrow pda for the claim program
      * @param redeemerTokenAccount - The redeemer token account for the reward token
      *
@@ -721,6 +722,33 @@ var Vlock = /** @class */ (function () {
                     case 3:
                         tx = _a.sent();
                         return [2 /*return*/, tx];
+                }
+            });
+        });
+    };
+    /**
+     * Redeem iou tokens for the reward token
+     * @param redeemer - The redeemer public key
+     * @param iouMint - The iou token mint
+     * @param iouSource - The iou source token account
+     * @param amount - The amount to redeem
+     * @returns - The transaction signature
+     */
+    Vlock.prototype.redeemIouTokens = function (redeemer, iouMint, iouSource, amount) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, IOU_TOKEN_REDEEMER_PDA, bump, tx;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = web3_js_1.PublicKey.findProgramAddressSync([
+                            Buffer.from("Redeemer"),
+                            iouMint.toBuffer(),
+                            this.REWARD_TOKEN_MINT.toBuffer(),
+                        ], this.QUARRY_REDEEMER_PROGRAM_ID), IOU_TOKEN_REDEEMER_PDA = _a[0], bump = _a[1];
+                        return [4 /*yield*/, this.program.methods.redeem()];
+                    case 1:
+                        tx = _b.sent();
+                        return [2 /*return*/];
                 }
             });
         });
