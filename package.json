@@ -11,11 +11,14 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "watch": "tsc --watch"
   },
   "author": "NineOwls",
   "license": "ISC",
   "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
+    "@project-serum/borsh": "^0.2.5",
     "@solana/spl-token": "^0.4.8",
     "@solana/web3.js": "^1.95.3",
     "@types/react": "^18.3.11",
