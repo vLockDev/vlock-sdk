@@ -3,8 +3,8 @@
   "version": "1.0.2",
   "description": "A lightweight sdk for interacting with the vlock solana program",
   "main": "dist/index.js",
-  "repository": "https://github.com/vLockDev/vlock-sdk",
-  "homepage": "https://github.com/vLockDev/vlock-sdk",
+  "repository": "https://github.com/vLockDev/vlock-program-sdk",
+  "homepage": "https://github.com/vLockDev/vlock-program-sdk",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
