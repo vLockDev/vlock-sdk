@@ -52,19 +52,25 @@ var Vlock = /** @class */ (function () {
      * @param network - The network (mainnet or devnet)
      * @param realmName - The name of the realm
      * @param realmVoterPublicKey - The public key of the realm voter
+     * @param quarryPda - The quarry pda that rewards
+     * @param rewarderPda - The rewarder pda that distributes rewards
      * @param xyzTokenMint - The public key of the deposit token mint
      * @param votaXyzMint - The public key of the collateral token mint
      * @param rewardTokenMint - The public key of the reward token mint
+     * @param iouTokenMint - The public key of the iou token mint
      */
-    function Vlock(program, programId, network, realmName, realmVoterPublicKey, xyzTokenMint, votaXyzMint, rewardTokenMint) {
+    function Vlock(program, programId, network, realmName, realmVoterPublicKey, quarryPda, rewarderPda, xyzTokenMint, votaXyzMint, rewardTokenMint, iouTokenMint) {
         this.program = program;
         this.programId = programId;
         this.network = network;
         this.REALM_NAME = realmName;
         this.REALMS_VOTER_PUBLIC_KEY = realmVoterPublicKey;
+        this.QUARRY_PDA = quarryPda;
         this.XYZ_TOKEN_MINT = xyzTokenMint;
         this.VOTA_XYZ_MINT = votaXyzMint;
         this.REWARD_TOKEN_MINT = rewardTokenMint;
+        this.IOU_TOKEN_MINT = iouTokenMint;
+        this.REWARDER_PDA = rewarderPda;
         this.GOVERNANCE_PROGRAM_ID = new web3_js_1.PublicKey("GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw");
         this.VOTER_STAKE_REGISTRY_PROGRAM_ID = new web3_js_1.PublicKey("vsr2nfGVNHmSY8uxoBGqq8AQbwz3JwaEaHqGbsTPXqQ");
         this.QUARRY_PROGRAM_ID = new web3_js_1.PublicKey("QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB");
@@ -205,17 +211,17 @@ var Vlock = /** @class */ (function () {
      * @param rewardMint - The reward mint that the vault should hold and distribute
      * @returns - The reward vault public key and the transaction signature
      */
-    Vlock.prototype.initializeRewardVault = function (rewardMint) {
+    Vlock.prototype.initializeRewardVaults = function () {
         return __awaiter(this, void 0, void 0, function () {
             var tx;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.program.methods.initRewardVault()
+                    case 0: return [4 /*yield*/, this.program.methods.initRewardVaults()
                             .accounts({
                             vault: this.VAULT_PDA,
                             rewardVault: this.REWARD_VAULT_PDA,
                             payer: this.REALMS_VOTER_PUBLIC_KEY,
-                            rewardMint: rewardMint,
+                            rewardMint: this.REWARD_TOKEN_MINT,
                             tokenProgram: spl_token_1.TOKEN_PROGRAM_ID,
                             associatedTokenProgram: spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID,
                             systemProgram: web3_js_1.SystemProgram.programId,
@@ -470,6 +476,7 @@ var Vlock = /** @class */ (function () {
     /**
      * Creates an iou token redeemer
      * @param iouTokenMint - The iou token mint
+     *
      * @returns - The iou token redeemer public key and the transaction signature
      */
     Vlock.prototype.createIouTokenRedeemer = function (iouTokenMint) {
@@ -728,13 +735,15 @@ var Vlock = /** @class */ (function () {
     };
     /**
      * Redeem iou tokens for the reward token
-     * @param redeemer - The redeemer public key
      * @param iouMint - The iou token mint
-     * @param iouSource - The iou source token account
      * @param amount - The amount to redeem
+     * @param userIouTokenAccount - The user's iou token account
+     * @param userRewardTokenAccount - The user's reward token account
+     * @param redeemerVaultTokenAccount   - The redeemer token account
+     * @param payer - The payer's public key
      * @returns - The transaction signature
      */
-    Vlock.prototype.redeemIouTokens = function (redeemer, iouMint, iouSource, amount) {
+    Vlock.prototype.redeemIouTokens = function (iouMint, amount, userIouTokenAccount, userRewardTokenAccount, redeemerVaultTokenAccount, payer) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, IOU_TOKEN_REDEEMER_PDA, bump, tx;
             return __generator(this, function (_b) {
@@ -745,10 +754,26 @@ var Vlock = /** @class */ (function () {
                             iouMint.toBuffer(),
                             this.REWARD_TOKEN_MINT.toBuffer(),
                         ], this.QUARRY_REDEEMER_PROGRAM_ID), IOU_TOKEN_REDEEMER_PDA = _a[0], bump = _a[1];
-                        return [4 /*yield*/, this.program.methods.redeem()];
+                        return [4 /*yield*/, this.program.methods.redeemTokens(amount)
+                                .accounts({
+                                vault: this.VAULT_PDA,
+                                redeemerProgram: this.QUARRY_REDEEMER_PROGRAM_ID,
+                                redeemer: IOU_TOKEN_REDEEMER_PDA,
+                                iouMint: iouMint,
+                                iouSource: userIouTokenAccount,
+                                redemptionVault: redeemerVaultTokenAccount,
+                                redemptionDestination: userRewardTokenAccount,
+                                payer: payer,
+                                tokenProgram: spl_token_1.TOKEN_PROGRAM_ID,
+                            })
+                                .rpc()
+                                .catch(function (err) {
+                                console.log(err);
+                                throw err;
+                            })];
                     case 1:
                         tx = _b.sent();
-                        return [2 /*return*/];
+                        return [2 /*return*/, tx];
                 }
             });
         });

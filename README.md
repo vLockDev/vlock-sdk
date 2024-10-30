@@ -97,6 +97,26 @@ const depositXYZTokens = async (amount: number, payer: PublicKey) => {
   }
 };
 
+// Redeem IOU tokens and receive reward tokens
+const redeemTokens = async (
+  amount: number,
+  userIouTokenAccount: PublicKey,
+  userRewardTokenAccount: PublicKey,
+  payer: PublicKey
+) => {
+  try {
+    const tx = await vlock.redeemTokens(
+      amount,
+      userIouTokenAccount,
+      userRewardTokenAccount,
+      payer
+    );
+    console.log("Redeem Transaction Signature:", tx);
+  } catch (error) {
+    console.error("Error redeeming tokens:", error);
+  }
+};
+
 // Create a mint wrapper for IOU tokens
 const createIouMintWrapper = async (
   iouMint: PublicKey,
@@ -264,16 +284,6 @@ const stakeVotaXyzTokens = async (
     console.error("Error staking tokens:", error);
   }
 };
-
-// Get detailed information about a rewarder
-const displayRewarderInfo = async (rewarder: PublicKey) => {
-  try {
-    const rewarderInfo = await vlock.getRewarderInfo(rewarder);
-    console.log("Rewarder Information:", rewarderInfo);
-  } catch (error) {
-    console.error("Error fetching rewarder information:", error);
-  }
-};
 ```
 
 # COMPLETE EXAMPLE
@@ -325,6 +335,11 @@ const main = async () => {
   const payer = new PublicKey("PayerPublicKey");
   await vlock.depositTokens(1000, payer);
 
+// Redeem IOU tokens and receive reward tokens
+  const userIouTokenAccount = new PublicKey("UserIouTokenAccount");
+  const userRewardTokenAccount = new PublicKey("UserRewardTokenAccount");
+  await vlock.redeemTokens(1000, userIouTokenAccount, userRewardTokenAccount, payer);
+
   // Create mint wrapper
   const iouMint = new PublicKey("IouMintAddress");
   const mintWrapperPda = new PublicKey("MintWrapperPDA");
@@ -357,8 +372,7 @@ const main = async () => {
   // Get vault details
   await vlock.getVaultDetails();
 
-  // Get rewarder info
-  await vlock.getRewarderInfo(rewarder);
+
 };
 
 main().catch((err) => {

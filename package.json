@@ -1,7 +1,7 @@
 {
   "name": "vlock-program-sdk",
-  "version": "1.0.2",
-  "description": "A lightweightsdk for interacting with the vlock solana program",
+  "version": "1.0.3",
+  "description": "A lightweight sdk for interacting with the vlock & quarry solana programs",
   "main": "dist/index.js",
   "repository": "https://github.com/vLockDev/vlock-sdk",
   "homepage": "https://github.com/vLockDev/vlock-sdk",

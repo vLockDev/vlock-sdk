@@ -1,10 +1,9 @@
-import { Connection, Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
+import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import * as borsh from "@project-serum/borsh";
 import { BN } from "@coral-xyz/anchor";
 
 /**
@@ -38,17 +37,20 @@ export default class Vlock {
   public XYZ_TOKEN_MINT: PublicKey;
   public VOTA_XYZ_MINT: PublicKey;
   public REWARD_TOKEN_MINT: PublicKey;
+  public IOU_TOKEN_MINT: PublicKey;
 
   // Vaults and Deposit Identifiers
   public VAULT_PDA: PublicKey;
   public DEPOSIT_VAULT_PDA: PublicKey;
   public COLLATERAL_VAULT_PDA: PublicKey;
   public REWARD_VAULT_PDA: PublicKey;
+  public REWARDER_PDA: PublicKey;
 
   // PDA Identifiers for Voter and Stake
   public REGISTRAR_PDA: PublicKey;
   public VOTER_PDA: PublicKey;
   public VOTER_VAULT_PDA: PublicKey;
+  public QUARRY_PDA: PublicKey;
 
   /**
    * Constructor for the Vlock class
@@ -57,9 +59,12 @@ export default class Vlock {
    * @param network - The network (mainnet or devnet)
    * @param realmName - The name of the realm
    * @param realmVoterPublicKey - The public key of the realm voter
+   * @param quarryPda - The quarry pda that rewards
+   * @param rewarderPda - The rewarder pda that distributes rewards
    * @param xyzTokenMint - The public key of the deposit token mint
    * @param votaXyzMint - The public key of the collateral token mint
    * @param rewardTokenMint - The public key of the reward token mint
+   * @param iouTokenMint - The public key of the iou token mint
    */
   constructor(
     program: any,
@@ -67,18 +72,24 @@ export default class Vlock {
     network: string,
     realmName: string,
     realmVoterPublicKey: PublicKey,
+    quarryPda: PublicKey,
+    rewarderPda: PublicKey,
     xyzTokenMint: PublicKey,
     votaXyzMint: PublicKey,
-    rewardTokenMint: PublicKey
+    rewardTokenMint: PublicKey,
+    iouTokenMint: PublicKey
   ) {
     this.program = program;
     this.programId = programId;
     this.network = network;
     this.REALM_NAME = realmName;
     this.REALMS_VOTER_PUBLIC_KEY = realmVoterPublicKey;
+    this.QUARRY_PDA = quarryPda;
     this.XYZ_TOKEN_MINT = xyzTokenMint;
     this.VOTA_XYZ_MINT = votaXyzMint;
     this.REWARD_TOKEN_MINT = rewardTokenMint;
+    this.IOU_TOKEN_MINT = iouTokenMint;
+    this.REWARDER_PDA = rewarderPda;
 
     this.GOVERNANCE_PROGRAM_ID = new PublicKey(
       "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw"
@@ -259,13 +270,13 @@ export default class Vlock {
    * @param rewardMint - The reward mint that the vault should hold and distribute
    * @returns - The reward vault public key and the transaction signature
    */
-  public async initializeRewardVault(rewardMint: PublicKey) {
-    const tx = await (this.program.methods.initRewardVault() as any)
+  public async initializeRewardVaults() {
+    const tx = await (this.program.methods.initRewardVaults() as any)
       .accounts({
         vault: this.VAULT_PDA,
         rewardVault: this.REWARD_VAULT_PDA,
         payer: this.REALMS_VOTER_PUBLIC_KEY,
-        rewardMint: rewardMint,
+        rewardMint: this.REWARD_TOKEN_MINT,
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
@@ -509,6 +520,7 @@ export default class Vlock {
   /**
    * Creates an iou token redeemer
    * @param iouTokenMint - The iou token mint
+   *
    * @returns - The iou token redeemer public key and the transaction signature
    */
   public async createIouTokenRedeemer(iouTokenMint: PublicKey) {
@@ -780,17 +792,21 @@ export default class Vlock {
 
   /**
    * Redeem iou tokens for the reward token
-   * @param redeemer - The redeemer public key
    * @param iouMint - The iou token mint
-   * @param iouSource - The iou source token account
    * @param amount - The amount to redeem
+   * @param userIouTokenAccount - The user's iou token account
+   * @param userRewardTokenAccount - The user's reward token account
+   * @param redeemerVaultTokenAccount   - The redeemer token account
+   * @param payer - The payer's public key
    * @returns - The transaction signature
    */
   public async redeemIouTokens(
-    redeemer: PublicKey,
     iouMint: PublicKey,
-    iouSource: PublicKey,
-    amount: number
+    amount: number,
+    userIouTokenAccount: PublicKey,
+    userRewardTokenAccount: PublicKey,
+    redeemerVaultTokenAccount: PublicKey,
+    payer: PublicKey
   ) {
     const [IOU_TOKEN_REDEEMER_PDA, bump] = PublicKey.findProgramAddressSync(
       [
@@ -800,6 +816,25 @@ export default class Vlock {
       ],
       this.QUARRY_REDEEMER_PROGRAM_ID
     );
-    const tx = await (this.program.methods.redeem() as any);
+
+    const tx = await (this.program.methods.redeemTokens(amount) as any)
+      .accounts({
+        vault: this.VAULT_PDA,
+        redeemerProgram: this.QUARRY_REDEEMER_PROGRAM_ID,
+        redeemer: IOU_TOKEN_REDEEMER_PDA,
+        iouMint: iouMint,
+        iouSource: userIouTokenAccount,
+        redemptionVault: redeemerVaultTokenAccount,
+        redemptionDestination: userRewardTokenAccount,
+        payer: payer,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc()
+      .catch((err: any) => {
+        console.log(err);
+        throw err;
+      });
+
+    return tx;
   }
 }

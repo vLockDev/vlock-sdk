@@ -23,13 +23,16 @@ export default class Vlock {
     XYZ_TOKEN_MINT: PublicKey;
     VOTA_XYZ_MINT: PublicKey;
     REWARD_TOKEN_MINT: PublicKey;
+    IOU_TOKEN_MINT: PublicKey;
     VAULT_PDA: PublicKey;
     DEPOSIT_VAULT_PDA: PublicKey;
     COLLATERAL_VAULT_PDA: PublicKey;
     REWARD_VAULT_PDA: PublicKey;
+    REWARDER_PDA: PublicKey;
     REGISTRAR_PDA: PublicKey;
     VOTER_PDA: PublicKey;
     VOTER_VAULT_PDA: PublicKey;
+    QUARRY_PDA: PublicKey;
     /**
      * Constructor for the Vlock class
      * @param program - The program instance
@@ -37,11 +40,14 @@ export default class Vlock {
      * @param network - The network (mainnet or devnet)
      * @param realmName - The name of the realm
      * @param realmVoterPublicKey - The public key of the realm voter
+     * @param quarryPda - The quarry pda that rewards
+     * @param rewarderPda - The rewarder pda that distributes rewards
      * @param xyzTokenMint - The public key of the deposit token mint
      * @param votaXyzMint - The public key of the collateral token mint
      * @param rewardTokenMint - The public key of the reward token mint
+     * @param iouTokenMint - The public key of the iou token mint
      */
-    constructor(program: any, programId: PublicKey, network: string, realmName: string, realmVoterPublicKey: PublicKey, xyzTokenMint: PublicKey, votaXyzMint: PublicKey, rewardTokenMint: PublicKey);
+    constructor(program: any, programId: PublicKey, network: string, realmName: string, realmVoterPublicKey: PublicKey, quarryPda: PublicKey, rewarderPda: PublicKey, xyzTokenMint: PublicKey, votaXyzMint: PublicKey, rewardTokenMint: PublicKey, iouTokenMint: PublicKey);
     /**
      *
      * Fetches the current vault details
@@ -69,7 +75,7 @@ export default class Vlock {
      * @param rewardMint - The reward mint that the vault should hold and distribute
      * @returns - The reward vault public key and the transaction signature
      */
-    initializeRewardVault(rewardMint: PublicKey): Promise<{
+    initializeRewardVaults(): Promise<{
         rewardVault: PublicKey;
         tx: any;
     }>;
@@ -129,6 +135,7 @@ export default class Vlock {
     /**
      * Creates an iou token redeemer
      * @param iouTokenMint - The iou token mint
+     *
      * @returns - The iou token redeemer public key and the transaction signature
      */
     createIouTokenRedeemer(iouTokenMint: PublicKey): Promise<{
@@ -192,11 +199,13 @@ export default class Vlock {
     stakeTokens(miner: PublicKey, quarry: PublicKey, rewarder: PublicKey, amount: number, payer: PublicKey): Promise<any>;
     /**
      * Redeem iou tokens for the reward token
-     * @param redeemer - The redeemer public key
      * @param iouMint - The iou token mint
-     * @param iouSource - The iou source token account
      * @param amount - The amount to redeem
+     * @param userIouTokenAccount - The user's iou token account
+     * @param userRewardTokenAccount - The user's reward token account
+     * @param redeemerVaultTokenAccount   - The redeemer token account
+     * @param payer - The payer's public key
      * @returns - The transaction signature
      */
-    redeemIouTokens(redeemer: PublicKey, iouMint: PublicKey, iouSource: PublicKey, amount: number): Promise<void>;
+    redeemIouTokens(iouMint: PublicKey, amount: number, userIouTokenAccount: PublicKey, userRewardTokenAccount: PublicKey, redeemerVaultTokenAccount: PublicKey, payer: PublicKey): Promise<any>;
 }
