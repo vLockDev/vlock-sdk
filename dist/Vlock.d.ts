@@ -1,4 +1,4 @@
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 /**
  * Vlock class
  * @class
@@ -75,7 +75,7 @@ export default class Vlock {
      * @param rewardMint - The reward mint that the vault should hold and distribute
      * @returns - The reward vault public key and the transaction signature
      */
-    initializeRewardVaults(): Promise<{
+    initializeRewardVault(): Promise<{
         rewardVault: PublicKey;
         tx: any;
     }>;
@@ -98,41 +98,6 @@ export default class Vlock {
      */
     setDelegate(delegate: string): Promise<any>;
     /**
-     * Creates iou mint wrapper for and iou rewarder
-     * @param iouMint - The mint address to be used as the IOU token
-     * @param mintWrapperPda - The pda for the mint wrapper
-     * @param arbitraryBaseKeyPair - The arbitrary base key pair
-     * @param hardCap - The hard cap for the iou rewarder - this is required by the wrapper program
-     * @param decimals - The decimals for the iou token
-     * @returns - The iou mint wrapper public key and the transaction signature
-     */
-    createMintWrapper(iouMint: PublicKey, mintWrapperPda: PublicKey, arbitraryBaseKeyPair: Keypair, hardCap: number, decimals: number): Promise<{
-        wrapper: PublicKey;
-        tx: any;
-    }>;
-    /**
-     * Creates an iou rewarder
-     * @param iouMintWrapper - The iou mint wrapper public key
-     * @param iouTokenMint - The mint address of the token to be used as the iou token
-     * @param arbitraryBaseKeyPair - The arbitrary base key pair
-     * @param iouRewarderPda - The pda for the iou rewarder
-     * @returns - The iou rewarder public key, the reward vault public key, and the transaction signature
-     */
-    createIouRewarder(iouMintWrapper: PublicKey, iouTokenMint: PublicKey, arbitraryBaseKeyPair: Keypair, iouRewarderPda: PublicKey): Promise<{
-        rewarder: PublicKey;
-        tx: any;
-    }>;
-    /**
-     * Creates a quarry that rewards iou tokens from the rewarder
-     * @param rewarder - The iou rewarder public key
-     * @param quarryPda - The pda for the quarry
-     * @returns - The quarry public key and the transaction signature
-     */
-    createQuarry(rewarder: PublicKey, quarryPda: PublicKey): Promise<{
-        quarry: PublicKey;
-        tx: any;
-    }>;
-    /**
      * Creates an iou token redeemer
      * @param iouTokenMint - The iou token mint
      *
@@ -152,51 +117,6 @@ export default class Vlock {
      * @returns - The transaction signature
      */
     claimRewards(rewarder: PublicKey, escrowPda: PublicKey, redeemerTokenAccount: PublicKey): Promise<any>;
-    /**
-     * Claim rewards from the claim program and sends them to the redeemer
-     * @param rewarder - The rewarder public key
-     * @param mintWrapper - The mint wrapper public key
-     * @param iouMint - The iou token mint
-     * @param userTokenAccount - The user token account for the reward token
-     * @param minter - The minter public key
-     * @param miner - The miner public key
-     * @param quarry - The quarry public key
-     * @param payer - The payer's public key
-     * @returns - The transaction signature
-     */
-    claimQuarryRewards(rewarder: PublicKey, mintWrapper: PublicKey, iouMint: PublicKey, userTokenAccount: PublicKey, minter: PublicKey, miner: PublicKey, quarry: PublicKey, payer: PublicKey): Promise<any>;
-    /**
-     * Creates a miner for the given quarry - needed for the user to stake their votaXYZ tokens
-     * @param quarry - The quarry public key
-     * @param payer - The payer's public key
-     * @param rewarder - The rewarder public key
-     * @param minerTokenAccount - The miner token account for the miner
-     * @returns - The transaction signature and the miner public key
-     */
-    createMiner(quarry: PublicKey, payer: PublicKey, rewarder: PublicKey, minerTokenAccount: PublicKey): Promise<{
-        miner: PublicKey;
-        tx: any;
-    }>;
-    /**
-     * Creates a minter for the given quarry
-     * @param payer - The payer's public key
-     * @param rewarder - The rewarder public key
-     * @param mintWrapperPDA - The mint wrapper pda
-     * @returns - The transaction signature and the minter public key
-     */
-    createMinter(payer: PublicKey, rewarder: PublicKey, mintWrapperPDA: PublicKey): Promise<{
-        minter: PublicKey;
-        tx: any;
-    }>;
-    /**
-     * Stakes votaXYZ tokens in the quarry
-     * @param miner - The miner public key
-     * @param quarry - The quarry public key
-     * @param rewarder - The rewarder public key
-     * @param amount - The amount to stake
-     * @returns - The transaction signature
-     */
-    stakeTokens(miner: PublicKey, quarry: PublicKey, rewarder: PublicKey, amount: number, payer: PublicKey): Promise<any>;
     /**
      * Redeem iou tokens for the reward token
      * @param iouMint - The iou token mint
