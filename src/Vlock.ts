@@ -230,7 +230,7 @@ export default class Vlock {
         systemProgram: SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -255,7 +255,7 @@ export default class Vlock {
         systemProgram: SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -280,7 +280,7 @@ export default class Vlock {
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -344,7 +344,7 @@ export default class Vlock {
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -365,7 +365,7 @@ export default class Vlock {
         realmsVoteAccount: this.VOTER_PDA,
         payer: this.REALMS_VOTER_PUBLIC_KEY,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -391,7 +391,7 @@ export default class Vlock {
         payer: this.REALMS_VOTER_PUBLIC_KEY,
         systemProgram: SystemProgram.programId,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -427,7 +427,7 @@ export default class Vlock {
         systemProgram: SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -472,7 +472,7 @@ export default class Vlock {
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;
@@ -520,7 +520,7 @@ export default class Vlock {
         payer: payer,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
-      .rpc()
+      .instruction()
       .catch((err: any) => {
         console.log(err);
         throw err;

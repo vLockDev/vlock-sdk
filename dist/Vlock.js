@@ -161,7 +161,7 @@ var Vlock = /** @class */ (function () {
                             systemProgram: web3_js_1.SystemProgram.programId,
                             tokenProgram: spl_token_1.TOKEN_PROGRAM_ID,
                         })
-                            .rpc()
+                            .instruction()
                             .catch(function (err) {
                             console.log(err);
                             throw err;
@@ -193,7 +193,7 @@ var Vlock = /** @class */ (function () {
                             systemProgram: web3_js_1.SystemProgram.programId,
                             tokenProgram: spl_token_1.TOKEN_PROGRAM_ID,
                         })
-                            .rpc()
+                            .instruction()
                             .catch(function (err) {
                             console.log(err);
                             throw err;
@@ -225,7 +225,7 @@ var Vlock = /** @class */ (function () {
                             associatedTokenProgram: spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID,
                             systemProgram: web3_js_1.SystemProgram.programId,
                         })
-                            .rpc()
+                            .instruction()
                             .catch(function (err) {
                             console.log(err);
                             throw err;
@@ -278,7 +278,7 @@ var Vlock = /** @class */ (function () {
                                 associatedTokenProgram: spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID,
                                 systemProgram: web3_js_1.SystemProgram.programId,
                             })
-                                .rpc()
+                                .instruction()
                                 .catch(function (err) {
                                 console.log(err);
                                 throw err;
@@ -306,7 +306,7 @@ var Vlock = /** @class */ (function () {
                             realmsVoteAccount: this.VOTER_PDA,
                             payer: this.REALMS_VOTER_PUBLIC_KEY,
                         })
-                            .rpc()
+                            .instruction()
                             .catch(function (err) {
                             console.log(err);
                             throw err;
@@ -339,7 +339,7 @@ var Vlock = /** @class */ (function () {
                             payer: this.REALMS_VOTER_PUBLIC_KEY,
                             systemProgram: web3_js_1.SystemProgram.programId,
                         })
-                            .rpc()
+                            .instruction()
                             .catch(function (err) {
                             console.log(err);
                             throw err;
@@ -379,7 +379,7 @@ var Vlock = /** @class */ (function () {
                                 systemProgram: web3_js_1.SystemProgram.programId,
                                 tokenProgram: spl_token_1.TOKEN_PROGRAM_ID,
                             })
-                                .rpc()
+                                .instruction()
                                 .catch(function (err) {
                                 console.log(err);
                                 throw err;
@@ -424,7 +424,7 @@ var Vlock = /** @class */ (function () {
                                 tokenProgram: spl_token_1.TOKEN_PROGRAM_ID,
                                 associatedTokenProgram: spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID,
                             })
-                                .rpc()
+                                .instruction()
                                 .catch(function (err) {
                                 console.log(err);
                                 throw err;
@@ -469,7 +469,7 @@ var Vlock = /** @class */ (function () {
                                 payer: payer,
                                 tokenProgram: spl_token_1.TOKEN_PROGRAM_ID,
                             })
-                                .rpc()
+                                .instruction()
                                 .catch(function (err) {
                                 console.log(err);
                                 throw err;

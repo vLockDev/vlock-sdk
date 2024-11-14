@@ -1,6 +1,6 @@
 {
   "name": "vlock-program-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight sdk for interacting with the vlock solana program",
   "main": "dist/index.js",
   "repository": "https://github.com/vLockDev/vlock-sdk",
@@ -11,8 +11,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build",
-    "watch": "tsc --watch"
+    "prepublishOnly": "npm run build"
   },
   "author": "NineOwls",
   "license": "ISC",
